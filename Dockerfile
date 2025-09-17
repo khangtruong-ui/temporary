@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # install python deps
-RUN apt-get update && apt-get install -y git
+RUN apt-get update && apt-get install -y git && apt install wget
 
 RUN sh setup.sh
 
