@@ -7,8 +7,8 @@ WORKDIR /app
 COPY . /app
 
 # install python deps
-RUN apt update
-RUN apt install git
+RUN apt-get update && apt-get install -y git
+
 RUN sh setup.sh
 
 EXPOSE 8000
