@@ -1,5 +1,5 @@
-python extra_code.py
 git clone https://huggingface.co/KhangTruong/vit-rvsa
+python extra_code.py
 cd vit-rvsa
 rm whole_vit.pth
 wget https://huggingface.co/KhangTruong/vit-rvsa/resolve/main/whole_vit.pth -O whole_vit.pth
