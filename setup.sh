@@ -2,7 +2,8 @@ mkdir -p /content/Images
 mkdir -p /content/result
 git clone https://huggingface.co/KhangTruong/vit-rvsa
 cd vit-rvsa
-
+rm whole_vit.pth
+wget https://huggingface.co/KhangTruong/vit-rvsa/resolve/main/whole_vit.pth -O whole_vit.pth
 pip install -q numpy==1.26.4 flask einops timm
 pip install -q --upgrade opencv-python
 # --- cell 1 ---
