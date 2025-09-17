@@ -7,6 +7,7 @@ WORKDIR /app
 COPY . /app
 
 # install python deps
+RUN apt update
 RUN apt install git
 RUN sh setup.sh
 
