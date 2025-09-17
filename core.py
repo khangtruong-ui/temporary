@@ -1,6 +1,7 @@
 import os
 import subprocess
 import shutil
+import sys
 
 # This assumes the directory 'vit-rvsa/mmrotate' exists
 os.chdir('vit-rvsa/mmrotate')
@@ -22,13 +23,13 @@ def predictor(img_bytes):
         # Save the image bytes to the temporary file
         with open(temp_img_path, 'wb') as f:
             f.write(img_bytes)
-        print('============================== PROCESSING ===============================')
+        print('============================== PROCESSING ===============================', file=sys.stderr)
         # Process the temporary image file using the subprocess
         subprocess.run(
             ['python', '../extract_feature.py', '-n', temp_img_path],
             check=True  # Raise an exception if the command fails
         )
-        print('============================== DONE ===============================')
+        print('============================== DONE ===============================', file=sys.stderr)
         # The subprocess should generate the 'visualized_result.jpg' file
         return 'visualized_result.jpg'
         
