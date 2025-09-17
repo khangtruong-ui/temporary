@@ -35,7 +35,6 @@ def predict():
             return send_file(BytesIO(out), mimetype='image/jpeg')
         elif isinstance(out, str):
             # maybe path
-            print(out)
             return send_file(out, mimetype='image/jpeg')
         else:
             # try jsonify
