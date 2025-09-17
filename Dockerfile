@@ -7,7 +7,7 @@ WORKDIR /app
 COPY . /app
 
 # install python deps
-COPY requirements.txt /app/requirements.txt
+RUN apt install git
 RUN sh setup.sh
 
 EXPOSE 8000
