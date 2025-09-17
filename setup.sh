@@ -4,6 +4,7 @@ git clone https://huggingface.co/KhangTruong/vit-rvsa
 cd vit-rvsa
 rm whole_vit.pth
 wget https://huggingface.co/KhangTruong/vit-rvsa/resolve/main/whole_vit.pth -O whole_vit.pth
+wget https://huggingface.co/KhangTruong/vit-rvsa/resolve/main/checkpoint.pth -O checkpoint.pth
 pip install -q numpy==1.26.4 flask einops timm
 pip install -q --upgrade opencv-python
 # --- cell 1 ---
