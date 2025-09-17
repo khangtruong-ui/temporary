@@ -34,7 +34,7 @@ def predictor(img_bytes):
         
     except FileNotFoundError as e:
         print(f"Error: The file or command was not found. {e}")
-        return ''
+        return 'error'
     except subprocess.CalledProcessError as e:
         print(f"Error: Subprocess failed with exit code {e.returncode}")
         return ''
