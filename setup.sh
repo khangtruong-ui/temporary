@@ -1,5 +1,4 @@
-mkdir -p /content/Images
-mkdir -p /content/result
+python extra_code.py
 git clone https://huggingface.co/KhangTruong/vit-rvsa
 cd vit-rvsa
 rm whole_vit.pth
@@ -20,6 +19,5 @@ pip install -q -e .
 cd ..
 git clone https://github.com/ViTAE-Transformer/MTP
 cp -r ./MTP/RS_Tasks_Finetune/Rotated_Detection/mmrotate1.x/mmrotate/* ./mmrotate/mmrotate
-python extra_code.py
 python install.py --root .
 cd mmrotate
