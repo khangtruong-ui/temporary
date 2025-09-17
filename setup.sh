@@ -3,7 +3,7 @@ mkdir -p /content/result
 git clone https://huggingface.co/KhangTruong/vit-rvsa
 cd vit-rvsa
 
-pip install -q numpy==1.26.4 flask
+pip install -q numpy==1.26.4 flask einops
 pip install -q --upgrade opencv-python
 # --- cell 1 ---
 pip install -q torch==2.0.1 torchvision==0.15.2 torchaudio==2.0.2 --index-url https://download.pytorch.org/whl/cpu
