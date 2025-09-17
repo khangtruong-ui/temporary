@@ -12,6 +12,7 @@ pip install -q mmcv==2.0.1 -f https://download.openmmlab.com/mmcv/dist/cpu/torch
 
 # --- cell 3 ---
 pip install -q "mmdet>=3.0.0rc6,<3.1.0"
+pip install -q numpy==1.26.4
 git clone https://github.com/open-mmlab/mmrotate -b 1.x
 cd mmrotate
 pip install -q -e .
