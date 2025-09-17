@@ -37,7 +37,7 @@ def predictor(img_bytes):
         return 'error'
     except subprocess.CalledProcessError as e:
         print(f"Error: Subprocess failed with exit code {e.returncode}")
-        return ''
+        return 'error'
     finally:
         # Clean up: Delete the temporary image file
         if os.path.exists(temp_img_path):
