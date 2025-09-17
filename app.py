@@ -2,7 +2,7 @@
 from flask import Flask, request, send_file, jsonify
 from io import BytesIO
 import traceback
-import notebook_converted as nbmod
+import core
 
 app = Flask(__name__)
 
@@ -10,12 +10,12 @@ app = Flask(__name__)
 # If not found, we will try to look for a `main` or `predict` function in the module.
 
 def find_inference_func(mod):
-    for name in ("run_inference","predict","inference","process_image","main"):
+    for name in ("run_inference","predict","inference","process_image","main", "predictor"):
         if hasattr(mod, name):
             return getattr(mod, name)
     return None
 
-INFER = find_inference_func(nbmod)
+INFER = find_inference_func(core)
 
 @app.route('/health', methods=['GET'])
 def health():
