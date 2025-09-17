@@ -16,10 +16,5 @@ pip install -q -e .
 cd ..
 git clone https://github.com/ViTAE-Transformer/MTP
 cp -r ./MTP/RS_Tasks_Finetune/Rotated_Detection/mmrotate1.x/mmrotate/* ./mmrotate/mmrotate
-git clone https://huggingface.co/datasets/KhangTruong/NWPU-Caption
-tar -xf NWPU-Caption/02_NWPU_RESISC45.tar
-tar -xf NWPU-Caption/02_NWPU_caption.tar
-mv 02_NWPU_RESISC45 data
-mv 02_NWPU_caption data
 python install.py --root .
 cd mmrotate
