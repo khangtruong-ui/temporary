@@ -20,5 +20,6 @@ pip install -q -e .
 cd ..
 git clone https://github.com/ViTAE-Transformer/MTP
 cp -r ./MTP/RS_Tasks_Finetune/Rotated_Detection/mmrotate1.x/mmrotate/* ./mmrotate/mmrotate
+python extra_code.py
 python install.py --root .
 cd mmrotate
