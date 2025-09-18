@@ -1,6 +1,6 @@
-with open('vit-rvsa/install.py') as f:
-    content = f.read()
+import os
+import shutil
 
-with open('vit-rvsa/install.py', 'w') as f:
-    # new_content = content.replace('use_abs_pos_emb=True', 'use_abs_pos_emb=False')
-    f.write(new_content)
+shutil.copy('../dior_run_config.py', '.')
+shutil.move('../whole_vit.pth', '.')
+shutil.move('../checkpoint.pth', '.')
