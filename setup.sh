@@ -4,7 +4,7 @@ cd vit-rvsa
 rm whole_vit.pth
 wget -q https://huggingface.co/KhangTruong/vit-rvsa/resolve/main/whole_vit.pth -O whole_vit.pth
 wget -q https://huggingface.co/KhangTruong/vit-rvsa/resolve/main/checkpoint.pth -O checkpoint.pth
-pip install -q numpy==1.26.4 flask einops timm
+pip install -q numpy==1.26.4 flask einops timm Pillow
 pip install -q --upgrade opencv-python
 # --- cell 1 ---
 pip install -q torch==2.0.1 torchvision==0.15.2 torchaudio==2.0.2 --index-url https://download.pytorch.org/whl/cpu
