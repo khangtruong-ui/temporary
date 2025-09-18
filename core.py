@@ -27,7 +27,8 @@ def predictor(img_bytes):
         # Process the temporary image file using the subprocess
         subprocess.run(
             ['python', '../extract_feature.py', '-n', temp_img_path],
-            check=True  # Raise an exception if the command fails
+            stdout=sys.stderr,
+            check=True,  # Raise an exception if the command fails
         )
         print('============================== DONE ===============================', file=sys.stderr)
         # The subprocess should generate the 'visualized_result.jpg' file
