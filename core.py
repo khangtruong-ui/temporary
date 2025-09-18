@@ -67,7 +67,7 @@ def predictor(img_bytes):
         )
         print('============================== DONE ===============================', file=sys.stderr)
         # The subprocess should generate the 'visualized_result.jpg' file
-        return '../visualized_result.jpg'
+        return 'mmrotate/visualized_result.jpg'
         
     except FileNotFoundError as e:
         print(f"Error: The file or command was not found. {e}")
