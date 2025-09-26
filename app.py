@@ -1,16 +1,15 @@
-
 from flask import Flask, request, send_file, jsonify
 from io import BytesIO
 import traceback
 import core
+import os
+import zipfile
+import io
 
 app = Flask(__name__)
 
-# Expect the converted notebook to expose a function `run_inference(image_bytes)` that returns bytes (processed image)
-# If not found, we will try to look for a `main` or `predict` function in the module.
-
 def find_inference_func(mod):
-    for name in ("run_inference","predict","inference","process_image","main", "predictor"):
+    for name in ("run_inference","predict","inference","process_image","main","predictor"):
         if hasattr(mod, name):
             return getattr(mod, name)
     return None
@@ -24,21 +23,39 @@ def health():
 @app.route('/predict', methods=['POST'])
 def predict():
     if INFER is None:
-        return jsonify(error="No inference function found in notebook_converted module. Please implement run_inference(image_bytes)"), 500
+        return jsonify(error="No inference function found"), 500
     if 'file' not in request.files:
         return jsonify(error="No file part, use multipart form field named 'file'"), 400
+    
     f = request.files['file']
     img_bytes = f.read()
+    return_json = request.args.get("json", "0") == "1"  # check query param ?json=1
+
     try:
-        out = INFER(img_bytes)
-        if isinstance(out, bytes):
-            return send_file(BytesIO(out), mimetype='image/jpeg')
+        out = INFER(img_bytes, json_return=return_json)
+
+        if isinstance(out, tuple):  # (json_path, image_path)
+            json_path, image_path = out
+
+            # Bundle JSON + Image into a zip in-memory
+            memory_file = io.BytesIO()
+            with zipfile.ZipFile(memory_file, 'w') as zf:
+                if os.path.exists(json_path):
+                    zf.write(json_path, arcname="output.json")
+                if os.path.exists(image_path):
+                    zf.write(image_path, arcname="visualized_result.jpg")
+            memory_file.seek(0)
+            return send_file(memory_file, download_name="result.zip", as_attachment=True)
+
         elif isinstance(out, str):
-            # maybe path
             return send_file(out, mimetype='image/jpeg')
+
+        elif isinstance(out, bytes):
+            return send_file(BytesIO(out), mimetype='image/jpeg')
+
         else:
-            # try jsonify
             return jsonify(result=str(type(out)))
+
     except Exception as e:
         traceback.print_exc()
         return jsonify(error=str(e)), 500
