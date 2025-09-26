@@ -50,8 +50,8 @@ def predictor(img_bytes, json_return: bool = False):
 
         print('============================== DONE ===============================', file=sys.stderr)
 
-        image_path = 'vit-rvsa/mmrotate/visualized_result.jpg'
-        json_path = 'vit-rvsa/mmrotate/output.json'
+        image_path = '/app/vit-rvsa/mmrotate/visualized_result.jpg'
+        json_path = '/app/vit-rvsa/mmrotate/output.json'
 
         if json_return:
             return (json_path, image_path)
