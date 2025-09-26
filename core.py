@@ -55,7 +55,7 @@ def predictor(img_bytes, json_return: bool = False):
 
         if json_return:
             return (json_path, image_path)
-        return image_path
+        return json_path
 
     except FileNotFoundError as e:
         print(f"Error: The file or command was not found. {e}")
