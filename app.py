@@ -1,10 +1,8 @@
-from flask import Flask, request, send_file, jsonify
-from io import BytesIO
+from flask import Flask, request, jsonify
 import traceback
 import core
 import os
-import zipfile
-import io
+import json
 
 app = Flask(__name__)
 
@@ -29,32 +27,15 @@ def predict():
     
     f = request.files['file']
     img_bytes = f.read()
-    return_json = request.args.get("json", "0") == "1"  # check query param ?json=1
 
     try:
-        out = INFER(img_bytes, json_return=return_json)
+        json_path = INFER(img_bytes)
+        if json_path == 'error' or not os.path.exists(json_path):
+            return jsonify(error="Failed to generate output.json"), 500
 
-        if isinstance(out, tuple):  # (json_path, image_path)
-            json_path, image_path = out
-
-            # Bundle JSON + Image into a zip in-memory
-            memory_file = io.BytesIO()
-            with zipfile.ZipFile(memory_file, 'w') as zf:
-                if os.path.exists(json_path):
-                    zf.write(json_path, arcname="output.json")
-                if os.path.exists(image_path):
-                    zf.write(image_path, arcname="visualized_result.jpg")
-            memory_file.seek(0)
-            return send_file(memory_file, download_name="result.zip", as_attachment=True)
-
-        elif isinstance(out, str):
-            return send_file(out, mimetype='image/jpeg')
-
-        elif isinstance(out, bytes):
-            return send_file(BytesIO(out), mimetype='image/jpeg')
-
-        else:
-            return jsonify(result=str(type(out)))
+        with open(json_path, "r") as jf:
+            data = json.load(jf)
+        return jsonify(data)
 
     except Exception as e:
         traceback.print_exc()
