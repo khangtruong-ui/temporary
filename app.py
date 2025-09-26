@@ -31,7 +31,7 @@ def predict():
     try:
         json_path = INFER(img_bytes)
         if json_path == 'error' or not os.path.exists(json_path):
-            return jsonify(error="Failed to generate output.json"), 500
+            return jsonify(error=f"Failed to generate output.json from {json_path}"), 500
 
         with open(json_path, "r") as jf:
             data = json.load(jf)
