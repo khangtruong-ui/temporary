@@ -476,7 +476,7 @@ class InceptionVision(keras.layers.Layer):
 class EfficientNetVision(keras.layers.Layer):
     def __init__(self):
         super().__init__()
-        self.backbone = keras.applications.EfficientNetB2(include_top=False)
+        self.backbone = keras.applications.EfficientNetB2(weights=None, include_top=False)
         self.backbone.trainable = False
 
     def call(self, image, **kwargs):
