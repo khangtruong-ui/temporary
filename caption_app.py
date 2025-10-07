@@ -848,7 +848,7 @@ def inference(image_array, printout=True):
     
     out_token = [EXPERIMENTAL.generate_caption(model, tf.constant(image_array)[tf.newaxis, ...]).numpy()[0][0]]
     txtout = [' '.join(num_to_str(w) for w in ws).strip().split() for ws in out_token]
-    return txtout
+    return txtout 
 
 # --- Flask API (replace your previous Flask block with this) ---
 from flask import Flask, request, jsonify
