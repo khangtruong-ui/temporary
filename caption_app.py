@@ -848,7 +848,6 @@ def inference(image_array, printout=True):
     
     out_token = [EXPERIMENTAL.generate_caption(model, tf.constant(image_array)[tf.newaxis, ...]).numpy()[0][0]]
     txtout = [' '.join(num_to_str(w) for w in ws).strip().split() for ws in out_token]
-    txtreference = [[' '.join(filter(lambda x: len(x) > 0, (reverse_dict[int(w)] for w in ws))).strip().split() for ws in wws if len(set(ws)) > 1] for wws in label.numpy()]
     return inp, txtout
 
 # --- Flask API (replace your previous Flask block with this) ---
