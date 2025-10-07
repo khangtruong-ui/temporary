@@ -823,14 +823,7 @@ EPOCH = 25
 lr = LR = LearningRate = 1e-4
 
 def get_init_epoch():
-    if not os.path.exists(f'./weight/{model_name}/depth.{MESHED_DEPTH}/head.{ATTENTION_HEAD}'):
-        !mkdir -p ./weight/{model_name}/depth.{MESHED_DEPTH}/head.{ATTENTION_HEAD}
-    lst = os.listdir(f'./weight/{model_name}/depth.{MESHED_DEPTH}/head.{ATTENTION_HEAD}')
-    newlst = [s[:-1] for s in lst]
-    num = [int(''.join(c for c in st if c.isnumeric())) for st in newlst]
-    dictionary = {k: v for k, v in zip(lst, num)}
-    lst = [dictionary[k] for k in dictionary]
-    return max(lst, default=0)
+    return 0
 
 def get_model_lastest():
     model = EXPERIMENTAL()
