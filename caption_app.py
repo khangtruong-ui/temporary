@@ -847,7 +847,8 @@ def prepare_model():
     return model
 
 reverse_dict = {v: k for k, v in tokenize_dict.items()}
-def inference(model, image_array, printout=True):
+model = prepare_model()
+def inference(image_array, printout=True):
     def num_to_str(value):
         if value in reverse_dict:
             return reverse_dict[value]
@@ -859,7 +860,84 @@ def inference(model, image_array, printout=True):
     txtreference = [[' '.join(filter(lambda x: len(x) > 0, (reverse_dict[int(w)] for w in ws))).strip().split() for ws in wws if len(set(ws)) > 1] for wws in label.numpy()]
     return inp, txtout
 
-model = prepare_model()
+# --- Flask API (replace your previous Flask block with this) ---
+from flask import Flask, request, jsonify
+import io
+import os
+import traceback
+from PIL import Image
+import numpy as np
+
+app = Flask(__name__)
+
+# keep your inference function mapped here
+INFER = inference  # ensure `inference` is defined above
+
+def pil_image_to_numpy(img: Image.Image, target_size=None) -> np.ndarray:
+    """Convert PIL image to uint8 numpy array (H,W,3). Optionally resize."""
+    if target_size is not None:
+        img = img.resize((target_size[1], target_size[0]), Image.BILINEAR)
+    img = img.convert('RGB')
+    arr = np.array(img)
+    return arr
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    # Basic sanity checks
+    if INFER is None:
+        return jsonify(error="No inference function found on server"), 500
+
+    if 'file' not in request.files:
+        return jsonify(error="No file part. Please upload with multipart form field named 'file'"), 400
+
+    uploaded = request.files['file']
+    if uploaded.filename == '':
+        return jsonify(error="Empty filename"), 400
+
+    try:
+        # Read bytes and open with PIL (works for JPEG/PNG/etc)
+        img_bytes = uploaded.read()
+        img = Image.open(io.BytesIO(img_bytes))
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify(error=f"Failed to read uploaded file as an image: {str(e)}"), 400
+
+    try:
+        # Convert to numpy array and resize to expected input shape
+        # Use the IDEAL_SHAPE constant defined in your module (height, width, channels)
+        target_size = IDEAL_SHAPE if 'IDEAL_SHAPE' in globals() else (256, 256, 3)
+        img_array = pil_image_to_numpy(img, target_size=target_size)
+
+        # If your model expects float inputs or special preprocessing, your
+        # inference function should handle that (many of your model classes call preprocess_input).
+        # Call INFER and accept flexible return types.
+        result = INFER(img_array, printout=False)
+
+        # Normalize return into JSON-friendly structure:
+        # If inference returns a tuple/list/dict — try to jsonify as-is;
+        # otherwise, wrap it.
+        if isinstance(result, (dict, list, str, int, float, bool)):
+            payload = result
+        elif isinstance(result, tuple):
+            # try to make tuple elements JSON serializable
+            payload = {"result_tuple": [r.tolist() if hasattr(r, "tolist") else r for r in result]}
+        else:
+            # fallback: try converting to list/str
+            try:
+                payload = {"result": result.tolist()}
+            except Exception:
+                payload = {"result_str": str(result)}
+
+        return jsonify({"status": "ok", "data": payload})
+
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify(error=f"Internal server error: {str(e)}"), 500
+
+if __name__ == '__main__':
+    # use 0.0.0.0 if you want external access (e.g., docker)
+    app.run(host='0.0.0.0', port=8001)
+
 
 
 
