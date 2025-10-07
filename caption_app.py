@@ -830,8 +830,7 @@ def get_model_lastest():
     img_inp = keras.Input((256, 256, 3))
     txt_inp = keras.Input((5, 70), dtype=tf.int32)
     model((img_inp, txt_inp))
-    if highest > 0:
-        model.load_weights(f'working.weights.h5')
+    model.load_weights(f'working.weights.h5')
     return model
 
 def prepare_model():
