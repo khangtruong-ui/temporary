@@ -1,0 +1,64 @@
+classes = np.array([
+    'airplane', 'airport', 'baseball_diamond',       
+    'basketball_court', 'beach', 'bridge', 
+    'chaparral', 'church', 'circular_farmland', 
+    'cloud', 'commercial_area', 'dense_residential', 
+    'desert', 'forest', 'freeway', 'golf_course', 
+    'ground_track_field', 'harbor', 'industrial_area', 
+    'intersection', 'island', 'lake', 'meadow', 'medium_residential', 
+    'mobile_home_park', 'mountain', 'overpass', 'palace', 'parking_lot', 
+    'railway', 'railway_station', 'rectangular_farmland', 'river', 
+    'roundabout', 'runway', 'sea_ice', 'ship', 'snowberg', 
+    'sparse_residential', 'stadium', 'storage_tank',       
+    'tennis_court', 'terrace', 'thermal_power_station', 'wetland'
+])
+
+class ResnetClassifier(keras.layers.Layer):
+    def __init__(self):
+        super().__init__()
+        self.backbone = keras.applications.ResNet50V2(include_top=False, weights='imagenet')
+        # self.backbone.trainable = False
+        self.pool = keras.layers.GlobalAveragePooling2D()
+        self.dense = keras.layers.Dense(len(classes), activation='softmax')
+
+    def call(self, x):
+        x = keras.applications.resnet_v2.preprocess_input(x)
+        feat_map = self.backbone(x)
+        x = self.pool(feat_map)
+        x = self.dense(x)
+        return x
+
+
+class VGG16Classifier(keras.layers.Layer):
+    def __init__(self):
+        super().__init__()
+        self.backbone = keras.applications.VGG16(include_top=False, weights='imagenet')
+        # self.backbone.trainable = False
+        self.pool = keras.layers.GlobalAveragePooling2D()
+        self.dense = keras.layers.Dense(len(classes), activation='softmax')
+
+    def call(self, x):
+        x = keras.applications.vgg16.preprocess_input(x)
+        feat_map = self.backbone(x)
+        x = self.pool(feat_map)
+        x = self.dense(x)
+
+def get_model(lr=1e-2):
+    inp = keras.Input(shape=(256, 256, 3))
+    x = ResnetClassifier()(inp)
+    model = keras.Model(inputs=inp, outputs=x)
+    model.compile()
+    return model
+
+model2 = get_model()
+model2.load_weights('resnet.weights.h5')
+
+def INFER2(model, image):
+    prob = model2(image[None, ...]).numpy()[0]
+    argmax = np.argmax(prob, axis=-1)
+    return str(classes[argmax]).replace('_', ' ')
+
+
+
+
+        return x
