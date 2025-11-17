@@ -14,6 +14,8 @@ from itertools import accumulate
 from functools import reduce
 import pandas as pd
 
+ANCHOR_VALUE = False
+
 IDEAL_SHAPE = (256, 256, 3)
 BATCH_SIZE = 25 if tf.config.list_physical_devices('GPU') else 2
 MAXIMUM_LENGTH = 70
@@ -841,6 +843,8 @@ def prepare_model():
 reverse_dict = {v: k for k, v in tokenize_dict.items()}
 model = prepare_model()
 def inference(image_array, printout=True):
+    if ANCHOR_VALUE:
+        image_array = send_to_devices(image_array)
     def num_to_str(value):
         if value in reverse_dict:
             return reverse_dict[value]
