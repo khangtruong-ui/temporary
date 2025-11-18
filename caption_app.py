@@ -840,6 +840,9 @@ def prepare_model():
     model.compile()
     return model
 
+if ANCHOR_VALUE:
+    state_dict = send_to_devices('working.weights.h5')
+
 reverse_dict = {v: k for k, v in tokenize_dict.items()}
 model = prepare_model()
 def inference(image_array, printout=True):
